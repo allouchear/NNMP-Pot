@@ -36,3 +36,11 @@ NNMP-Pot is intefraced with [ase](https://wiki.fysik.dtu.dk/ase/) and [LAMMPS](h
 After training, you can use ase (see xaseMD) or lammps (see xlammpsNVE).
 NNMP-Pot is tested with ase and LAMMPS for NVE and NVT molecular dynamics **but not fully tested with NPT one**.
 
+## Methods
+ - MPNN : similar to PhyNet model. However, we can use other type of basis functions, repulsive potential, several methods to add electrostatic potential. 
+You can find a input file for train (train.inp) and a script to run it (xtrain).
+ - EAMM : Embeded Atom Neural network
+ - EANNP : MPNN using Embeded atom overlap as basis functions
+ - EMMPNN : MPNN with Element modes instead a embaded layer as input
+**See getArguments function in Utils/UtilsFunctions.py file for more details about all available parameters.**
+
