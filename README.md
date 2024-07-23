@@ -28,3 +28,10 @@ You can also download the .zip file of NNMP-Pot : Click on Code and Download ZIP
 ```console
 git clone https://github.com/allouchear/NNMP-Pot.git
 
+## How to use it 
+See examples/H2O folder. 
+You can find a input file for train (train.inp) and a script to run it (xtrain).
+NNMP-Pot is intefraced with [ase](https://wiki.fysik.dtu.dk/ase/) and [LAMMPS](https://www.lammps.org/#gsc.tab=0)
+After training, you can use ase (see xaseMD) or lammps (see xlammpsNVE).
+NNMP-Pot is tested with ase and LAMMPS for NVE and NVT molecular dynamics **but not fully tested with NPT one**.
+
