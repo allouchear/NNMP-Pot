@@ -42,5 +42,6 @@ You can find a input file for train (train.inp) and a script to run it (xtrain).
  - EAMM : Embeded Atom Neural network
  - EANNP : MPNN using Embeded atom overlap as basis functions
  - EMMPNN : MPNN with Element modes instead a embaded layer as input
+
 **See getArguments function in Utils/UtilsFunctions.py file for more details about all available parameters.**
 
