@@ -1,0 +1,10 @@
+#!/bin/bash
+pos2lmp.awk POSCAR >data
+
+echo "" >> data
+echo "Masses" >> data
+echo "" >> data
+echo "1 15.994915" >> data
+echo "2 1.007825" >> data
+echo "" >> data
+echo see data

@@ -1,0 +1,6 @@
+			outputs += out
+			#compute non-hierarchicality loss
+			out2 = out**2
+			if i > 0:
+				nhloss += tf.reduce_mean(out2/(out2 + lastout2 + 1e-7))
+			lastout2 = out2

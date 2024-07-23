@@ -1,0 +1,2 @@
+source $HOME/shell/tensorFlowEnv
+python conver_n2p2_npz.py

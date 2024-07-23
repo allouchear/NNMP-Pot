@@ -1,0 +1,12 @@
+	def __call__(self, Z, R, idx_i, idx_j, offsets=None):
+		# Phi_i(L,alpha) : One by atom
+		bfByAtom, rij = self._computeEABF(Z, R, idx_i, idx_j, offsets=offsets)
+		#print("bfByAtom=",bfByAtom)
+		bfi = tf.gather(bfByAtom, idx_i)
+		bfj = tf.gather(bfByAtom, idx_j)
+		#print("bfi=",bfi)
+		#print("bfj=",bfj)
+
+		bfij=bfi*bfj # one basis for each (i,j), Size = len(idx_i)*number of basis of each atom
+		#print("bfij=",bfij)
+		return bfij,rij

@@ -1,0 +1,2 @@
+source $HOME/shell/tensorFlowEnv
+python conver_n2p2_xyz.py --n2p2_file a206.data --xyz_file a206.xyz  --conv_distance 0.529177

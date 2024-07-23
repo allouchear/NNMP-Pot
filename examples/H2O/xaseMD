@@ -1,0 +1,8 @@
+#!/bin/bash
+source ~allouche/shell/tensorFlowEnv
+#export OMP_NUM_THREADS=$1
+
+#export CUDA_VISIBLE_DEVICES='' # to force CPU use
+#export CUDA_VISIBLE_DEVICES='1' # select the second GPU
+time python ../../aseMD.py --mdType NVE --input_file_name POSCAR --output_traj_name md.traj --verbose 0 --nmax 20 --temperature 1000  --list_models chkpoint_dir
+

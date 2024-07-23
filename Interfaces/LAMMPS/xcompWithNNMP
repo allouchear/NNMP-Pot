@@ -1,0 +1,10 @@
+#!/bin/bash
+source env.sh
+cp -r $NNMPDIR/Interfaces/LAMMPS/src/USER-NNMP src
+cp src/MAKE/OPTIONS/Makefile.omp src/MAKE/MINE/Makefile.omp
+sed -i 's/-restrict//g' src/MAKE/MINE/Makefile.omp
+cd src
+make yes-user-nnmp
+make serial -j 8
+#make omp -j 8
+#make mpi -j 8 => NNMP cannot work with MPI

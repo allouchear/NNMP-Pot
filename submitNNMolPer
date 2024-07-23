@@ -1,0 +1,151 @@
+#!/bin/bash
+###################################################################
+#                                                                 #
+#  Run NNMOL in batch at RAPTOR                                   #
+#  Auteur:  A-R Allouche allouchear@univ-lyon1.fr                 #
+#  iLM, Villeurbanne                                              #
+#  May 2022                                                       #
+#                                                                 #
+###################################################################
+
+queue=$1 ; [ 0 = $# ] || shift
+nproc=$1 ; [ 0 = $# ] || shift
+configfile=$1 ; [ 0 = $# ] || shift
+
+filename="/home/theochem/allouche/MySoftwares/NNMol-Per/train.py"
+
+if [ -z "$filename" ]  || [ -z "$nproc" ] || [ -z "$queue" ] || [ -z "$configfile" ]
+then
+   clear
+   echo " " 
+   echo "=============================================================================="
+   echo " $0 Queue queue #procs inputfile.txt"
+   echo " Pour toutes questions contacter : "
+   echo " A.R. Allouche allouchear@univ-lyon1.fr"
+   echo "=============================================================================="
+   echo " Lynx   Queues : tc1  tc2  tc3  tc4  tc5  a22  p22  f22"
+   echo "        nprocs : 40   40   96   80  128   96  128  112"
+   echo " Raptor Queues : B0-0 B0-1 B0-2 B0-3 B0-4 B0-5 B1-2 B1-3 B1-4 B2-1 B2-2 B2-3 "
+   echo "        nprocs : 56   56   24   32  144   24  160   48   36   24   16   24"
+   echo "------------------------------------------------------------------------------"
+   echo "Vous devez fournir :"
+   echo " - Le nom de la queue (ou le nom du noeud)"
+   echo " - Le nombre de processeurs"
+   echo " - Le nom du fichier de donnees"
+   echo "------------------------------------------------------------------------------"
+   echo "Exemple:"
+   echo "       $0  tc5 4 AlO.inp "
+   echo "=============================================================================="
+   echo " " 
+   exit 1
+fi
+n=`squeue -u "$LOGNAME" | grep -c "$LOGNAME"`
+if [ $n -gt "500" ]
+then
+echo "==================================================================="
+echo "vous avez depasse votre quota"
+echo "vous n'avez le droit qu'a 20 jobs maximum"
+echo "==================================================================="
+exit 1
+fi
+
+nthreads=$nproc
+
+filepy=$filename
+fn=${configfile%.txt}
+filename=${fn%.inp}
+
+
+DEFAULTDIR=`pwd`
+if test ! -s "$filepy"
+then
+   echo " " 
+   echo "============================================"
+   echo "le fichier $filepy est introuvable(ou vide)"
+   echo "============================================"
+   echo " " 
+   exit 2
+fi
+if test ! -s "$configfile"
+then
+   echo " " 
+   echo "==============================================="
+   echo "le fichier $configfile est introuvable(ou vide)"
+   echo "==============================================="
+   echo " " 
+   exit 2
+fi
+
+
+nnmolfilepy=nnmol_${filename}.py
+endof=EOF
+cat > $filename.sh <<EOF
+#!/bin/bash
+
+cd $DEFAULTDIR
+source $HOME/.bashrc
+
+source /home/theochem/allouche/shell/tensorFlowEnv
+
+echo " "> $nnmolfilepy
+echo "import sys">> $nnmolfilepy
+echo "sys.path.append(\"/home/theochem/allouche/MySoftwares/NNMol-Per\")  ">> $nnmolfilepy
+awk '{
+if (\$0 ~ /tf.config.threading.set_intra_op_parallelism_threads/)
+	printf("tf.config.threading.set_intra_op_parallelism_threads($nproc)\n")
+else if (\$0 ~ /tf.config.threading.set_inter_op_parallelism_threads/)
+	printf("tf.config.threading.set_inter_op_parallelism_threads($nproc)\n")
+else 
+	printf("%s\n",\$0)
+
+}' $filepy >>  $nnmolfilepy
+
+time python -u $nnmolfilepy $configfile > $filename.out
+
+/bin/rm $filename.sh
+/bin/rm $nnmolfilepy
+
+EOF
+
+grb=$queue && [ $queue = "tc1" ] && grb="theochem" 
+[ $queue = "tc2" ] && grb="theochem" 
+[ $queue = "tc3" ] && grb="theochem" 
+[ $grb = "new" ] && grb="lynx_all" 
+[ $grb = "ibm" ] && grb="lynx_all" 
+
+qn="-p $queue"
+if [[  "$queue" == *"node"* ]]
+then
+q=$(/opt/slurm22/bin/sinfo  -Nel | grep "$queue" | awk '{printf("%s\n",$3)}')
+qn="-p $q --nodelist=$queue" 
+fi
+#echo $qn
+
+res=`sbatch -A $grb --output=$DEFAULTDIR/$filename.sout --error=$DEFAULTDIR/$filename.serr $qn --nodes=1 -n $nthreads $filename.sh`
+
+#echo "res=$res"
+rr=0
+rr=`expr match "$res" '.*has been submitted*.'`
+
+#echo $rr
+
+if [[ $rr -eq 0 ]]
+then
+echo " "
+echo "==================================================================="
+echo " "
+echo "Un fichier $filename.sh a ete cree pour lancer le calcul"
+echo "Ne pas effacer ce fichier avant la fin du calcul"
+echo " "
+echo "-------------------------------------------------------------------"
+echo " "
+echo "pour avoir des informations sur vos job taper : squeue "
+echo " "
+echo "pour detruire un job taper : scancel numjob"
+echo " "
+echo "==================================================================="
+echo " "
+else
+echo $res
+fi
+

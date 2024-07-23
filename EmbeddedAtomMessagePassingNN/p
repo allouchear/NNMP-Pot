@@ -1,0 +1,7 @@
+		#calculate radial basis function expansion
+		rbf = self.rbf_layer(Dij_sr)
+		#print("rbf=\n",rbf,"\n-------------------------------------\n")
+
+		#initialize feature vectors according to embeddings for nuclear charges
+		x = tf.gather(self.embeddings, Z)
+

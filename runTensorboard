@@ -1,0 +1,6 @@
+#!/bin/bash
+source  /home/allouche/shell/tensorflowEnv
+
+#tensorboard --logdir trainingNetNatChemQEMoreData/logs/
+tensorboard --logdir CheckpointDir/logs/
+

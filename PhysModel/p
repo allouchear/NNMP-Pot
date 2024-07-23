@@ -1,0 +1,6 @@
+	def computeAtomicProperties(self, data):
+		print("====================== Error ==============================");
+		print("computeProperties not yet implemented in PhysModelEEMPot.py");
+		print("====================== Error ==============================");
+		sys.exit()
+		return None, None, None, None

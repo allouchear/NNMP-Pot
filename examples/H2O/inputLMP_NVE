@@ -1,0 +1,60 @@
+###############################################################################
+# MD simulation for NN water
+###############################################################################
+
+###############################################################################
+# VARIABLES
+###############################################################################
+clear
+# Configuration files
+variable cfgFile         string "h2oLMP.data"
+# Timesteps
+variable numSteps        equal  200
+# NN
+#variable nnmpCutoff       equal  6.36
+variable nnmpCutoff       equal  7.408478
+# Masses
+variable mass_H          equal  1.007825
+variable mass_O          equal  15.994915
+newton off
+
+###############################################################################
+# GENERAL SETUP
+###############################################################################
+units metal
+# metal=>ase
+variable toev          equal  1.0
+#in ps
+variable dt              equal  0.001
+
+#units real
+# real=>ase
+#variable toev          equal  0.04336410
+#in fs
+#variable dt              equal  1.0
+
+boundary p p p
+atom_style atomic
+read_data ${cfgFile}
+mass 1 ${mass_O}
+mass 2 ${mass_H}
+timestep ${dt}
+thermo 1
+
+###############################################################################
+# NN
+###############################################################################
+pair_style nnmp "O H" module "/home/allouche/MySoftwares/NNMP-Pot/NNMP-Pot/NNMPLAMMPSModule.py" listmodels "chkpoint_dir" cflength 1.0 cfenergy ${toev} 
+pair_coeff * * ${nnmpCutoff}
+
+###############################################################################
+# INTEGRATOR
+###############################################################################
+fix INT all nve
+#dump 10 all xyz 500 traj.xyz
+dump 1 all xyz 10 traj.xyz
+
+###############################################################################
+# SIMULATION
+###############################################################################
+run ${numSteps}
