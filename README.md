@@ -27,6 +27,7 @@ You can also download the .zip file of NNMP-Pot : Click on Code and Download ZIP
 
 ```console
 git clone https://github.com/allouchear/NNMP-Pot.git
+```
 
 ## How to use it 
 See examples/H2O folder. 
