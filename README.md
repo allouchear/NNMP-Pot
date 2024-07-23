@@ -24,6 +24,7 @@ Using git,  Type :
 git clone https://github.com/allouchear/NNMP-Pot.git
 ```
 You can also download the .zip file of NNMP-Pot : Click on Code and Download ZIP
+The code is interfaced with LAMMPS. To compile LAMMPS for NNMP-Pot, see README file in NNMP-Pot/Interfaces /LAMMPS/
 
 ## How to use it 
 See examples/H2O folder. 
