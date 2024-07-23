@@ -1,6 +1,6 @@
 # Use NNMP-Pot via LAMMPS
 
-## Set envoronnement variables
+## Set environement variables
 Edit env.sh to set paths to your configuration (openmi,...)
 
 ## Compile LAMMPS with nnmp
@@ -12,7 +12,7 @@ cd <path-to-LAMMPS>/src
 ./xcompWithNNMP
 ```
 
-## To run lammps with NNMP
+## To run LAMMPS with NNMP
 set python env (conda ?)
 ```console
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:yourpathtopythonlib ( ? ~/anaconda3/envs/tf/lib)
