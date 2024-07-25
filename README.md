@@ -46,3 +46,4 @@ You can find a input file for train (train.inp) and a script to run it (xtrain).
 ## Contributors
 The code is written by Abdul-Rahman Allouche.\
 A part of the code (written for tensorflow2) is based on [PhysNet](https://github.com/MMunibas/PhysNet) code (written for tensorflow1)
+myXTB is a modified version of [xtb-python](https://github.com/grimme-lab/xtb-python) library writen by S. Grimme and coworkers
